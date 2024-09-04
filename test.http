@@ -1,2 +1,5 @@
+### GET httpbin
+GET https://httpbin.org/delay/5
+
 ### GET request to example server
 GET http://localhost:8080/block/5
