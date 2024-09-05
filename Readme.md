@@ -26,6 +26,8 @@ CompletableFuture.supplyAsync(() -> {
     return feldolgozEredmény(result);
 });
 ``` 
+A Servlet 3.0 és 3.1 verziókban az HTTP servlet szálnak nem kell élőnek lennie ahhoz, hogy visszaküldje az HTTP választ a felhasználónak
+
 JAVA 8 bevezette a CompletableFuture osztályt, amellyel reaktív pipeline-okat hozhatunk létre. A reaktív fejlesztési stílus nagy ötlete az, hogy egy pipeline-t specifikálunk egy használati eset végrehajtásához, de magát a használati esetet nem hajtjuk végre közvetlenül. A pipeline végrehajtása függetlenül történik, más szálakon.
 
 
