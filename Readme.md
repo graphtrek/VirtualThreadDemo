@@ -17,6 +17,19 @@
 
 ### Partial Reactive Design
 ![partial_reactive_design.png](partial_reactive_design.png)
+``` 
+CompletableFuture.supplyAsync(() -> {
+    // Például egy hosszabb művelet, amely egy másik szálon fut
+    return hosszúSzámítás();
+}).thenApply(result -> {
+    // A következő művelet a számítás eredményével
+    return feldolgozEredmény(result);
+});
+``` 
+JAVA 8 bevezette a CompletableFuture osztályt, amellyel reaktív pipeline-okat hozhatunk létre. A reaktív fejlesztési stílus nagy ötlete az, hogy egy pipeline-t specifikálunk egy használati eset végrehajtásához, de magát a használati esetet nem hajtjuk végre közvetlenül. A pipeline végrehajtása függetlenül történik, más szálakon.
+
+
+A CompletableFuture.supplyAsync() nem használja közvetlenül a Java NIO csomagot. Az aszinkron végrehajtásért felelős, és ha a benne futtatott kód nem blokkoló I/O-t (például Java NIO) használ, akkor az I/O műveletek nem blokkolják a szálat.
 
 ### Full Reactive Design
 ![full_reactive_design.png](full_reactive_design.png)
