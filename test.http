@@ -1,5 +1,8 @@
 ### GET httpbin
 GET https://httpbin.org/delay/5
 
-### GET request to example server
+### GET blocked request
 GET http://localhost:8080/block/5
+
+### GET partial reactive request
+GET http://localhost:8080/partialReactiveBlocks/12/threads/5
