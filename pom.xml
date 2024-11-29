@@ -11,7 +11,7 @@
     <groupId>co.grtk</groupId>
     <artifactId>VirtualThreadDemo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>VirtualThreadDEmo</name>
+    <name>VirtualThreadDemo</name>
     <description>VirtualThreadDEmo</description>
     <url/>
     <licenses>
@@ -37,6 +37,10 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
