@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClient;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -16,6 +18,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,6 +29,7 @@ public class HttpBinController {
     long sum;
     AtomicInteger counter = new AtomicInteger();
     AtomicInteger threadCounter = new AtomicInteger();
+    ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
 
     @GetMapping("/block/{seconds}")
     public String block(@PathVariable int seconds) {
@@ -69,16 +73,16 @@ public class HttpBinController {
         }
 
         CompletableFuture<Void> combinedFuture = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
-        combinedFuture.get(30L, TimeUnit.SECONDS);
+        combinedFuture.get(60L, TimeUnit.SECONDS);
 
         String combined = Stream.of(futures.toArray(new CompletableFuture[0]))
                 .map(CompletableFuture::join)
                 .map(Object::toString)
                 .collect(Collectors.joining("\n"));
-
+        long threads = threadMXBean.getAllThreadIds().length;
         long elapsed = System.currentTimeMillis() - start;
         sum += elapsed;
-        log.info("\n{}\n# {} nr of partialReactiveBlocks threads {} on {} blocked {} sec elapsed {} ms sum {} ms", combined, requestCounter, nrOfThreads, Thread.currentThread(), seconds, elapsed, sum);
+        log.info("\n{}\n# {} nr of partialReactiveBlocks threads {} on {} blocked {} sec elapsed {} ms sum {} ms jvm threads {}", combined, requestCounter, nrOfThreads, Thread.currentThread(), seconds, elapsed, sum, threads);
         return Thread.currentThread().toString();
     }
 
