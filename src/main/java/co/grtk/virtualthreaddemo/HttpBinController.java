@@ -43,10 +43,10 @@ public class HttpBinController {
         return "REST Call finished requestNr:" + requestNr + " threadNr:" + threadNr + " nrOfFinishedThreads: " + threadCounter.incrementAndGet() + " result:" + result.getStatusCode() + " elapsed: " + elapsed;
     }
 
-    private String waitForThread(int requestNr, int threadNr, int seconds) {
+    private String waitForThread(int requestNr, int threadNr, int millis) {
         long start = System.currentTimeMillis();
         try {
-            TimeUnit.SECONDS.sleep(seconds);
+            Thread.sleep(millis);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -64,7 +64,7 @@ public class HttpBinController {
         for (int i = 1; i <= nrOfThreads; i++) {
             final int threadNr = i;
             CompletableFuture<String> future
-                    = CompletableFuture.supplyAsync(() -> waitForRest(requestCounter, threadNr, seconds));
+                    = CompletableFuture.supplyAsync(() -> waitForThread(requestCounter, threadNr, seconds));
            futures.add(future);
         }
 
