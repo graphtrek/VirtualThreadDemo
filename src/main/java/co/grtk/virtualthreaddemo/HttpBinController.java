@@ -13,7 +13,6 @@ import java.lang.management.ThreadMXBean;
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -31,6 +30,13 @@ public class HttpBinController {
     AtomicInteger threadCounter = new AtomicInteger();
     ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
 
+    @GetMapping("/clear")
+    public String clear() {
+        counter.set(0);
+        threadCounter.set(0);
+        return Thread.currentThread().toString();
+    }
+
     @GetMapping("/block/{seconds}")
     public String block(@PathVariable int seconds) {
         waitForRest(counter.incrementAndGet(), 1, seconds);
@@ -47,7 +53,7 @@ public class HttpBinController {
         return "REST Call finished requestNr:" + requestNr + " threadNr:" + threadNr + " nrOfFinishedThreads: " + threadCounter.incrementAndGet() + " result:" + result.getStatusCode() + " elapsed: " + elapsed;
     }
 
-    private String waitForThread(int requestNr, int threadNr, int millis) {
+    public String waitForThread(int requestNr, int threadNr, int millis) {
         long start = System.currentTimeMillis();
         try {
             Thread.sleep(millis);
@@ -55,7 +61,16 @@ public class HttpBinController {
             throw new RuntimeException(e);
         }
         long elapsed = System.currentTimeMillis() - start;
-        return "Thread sleep finished requestNr:" + requestNr + " threadNr:" + threadNr + " nrOfFinishedThreads: " + threadCounter.incrementAndGet() + " elapsed: " + elapsed;
+        return "Thread sleep finished requestNr:" + requestNr + " threadNr:" + threadNr + " nrOfFinishedThreads: " + threadCounter.incrementAndGet() + " elapsed: " + elapsed + " ms";
+    }
+
+    private int getRequestThreadsCount() {
+        int requestThreads = 0;
+        for(long threadId : threadMXBean.getAllThreadIds()) {
+            if(threadMXBean.getThreadInfo(threadId).getThreadName().startsWith("http-nio-8080-exec-"))
+                requestThreads++;
+        }
+        return requestThreads;
     }
 
     @GetMapping("/partialReactiveBlocks/{seconds}/threads/{nrOfThreads}")
@@ -73,17 +88,18 @@ public class HttpBinController {
            futures.add(future);
         }
 
-        CompletableFuture<Void> combinedFuture = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
-        combinedFuture.get(60L, TimeUnit.SECONDS);
+       // CompletableFuture<Void> combinedFuture = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
+       // combinedFuture.get(5L, TimeUnit.SECONDS);
 
         String combined = Stream.of(futures.toArray(new CompletableFuture[0]))
                 .map(CompletableFuture::join)
                 .map(Object::toString)
                 .collect(Collectors.joining("\n"));
-        long threads = threadMXBean.getAllThreadIds().length;
+        long threadCount = getRequestThreadsCount();
+        long peakThreadCount = threadMXBean.getPeakThreadCount();
         long elapsed = System.currentTimeMillis() - start;
         sum += elapsed;
-        log.info("\n{}\n# {} nr of partialReactiveBlocks threads {} on {} blocked {} sec elapsed {} ms sum {} ms jvm threads {}", combined, requestCounter, nrOfThreads, Thread.currentThread(), seconds, elapsed, sum, threads);
+        log.info("\n{}\nrequest # {} threads # {} blocked # {} ms elapsed {} ms jvm threads # {}/{}", combined, requestCounter, nrOfThreads, seconds, elapsed, threadCount,peakThreadCount);
         return Thread.currentThread().toString();
     }
 
