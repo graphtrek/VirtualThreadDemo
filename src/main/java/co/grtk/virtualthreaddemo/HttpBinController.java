@@ -66,7 +66,8 @@ public class HttpBinController {
         ArrayList<CompletableFuture<String>> futures = new ArrayList<>();
 
         for (int i = 1; i <= nrOfThreads; i++) {
-            final int threadNr = i;
+            final int threadNr;
+            threadNr = i;
             CompletableFuture<String> future
                     = CompletableFuture.supplyAsync(() -> waitForThread(requestCounter, threadNr, seconds));
            futures.add(future);
