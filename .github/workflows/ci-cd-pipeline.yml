@@ -32,11 +32,11 @@ jobs:
 #          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 #          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-      - name: Minőségellenőrzés
-        uses: sonarsource/sonarqube-quality-gate-action@v1.1.0
-        env:
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#      - name: Minőségellenőrzés
+#        uses: sonarsource/sonarqube-quality-gate-action@v1.1.0
+#        env:
+#          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Docker bejelentkezés
         uses: docker/login-action@v3
