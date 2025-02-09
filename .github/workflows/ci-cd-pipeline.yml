@@ -76,7 +76,7 @@ jobs:
           docker push $IMAGE_NAME:${{ github.sha }}
 
       - name: Docker image mentése artifaktként
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: virtualthreaddemo-image
           path: |
