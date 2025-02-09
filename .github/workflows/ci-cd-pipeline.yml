@@ -51,10 +51,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
 
-      - name: Docker image build (Alpine + Java 21)
+      - name: Docker image build (Alpine)
         run: |
-          docker build -t ${{ github.actor }}/virtualthreaddemo:latest -f Dockerfile.alpine .
-          docker tag ${{ github.actor }}/virtualthreaddemo:latest ${{ github.actor }}/virtualthreaddemo:${{ github.sha }}
+          IMAGE_NAME=ghcr.io/${{ github.actor }}/virtualthreaddemo
+          docker build -t $IMAGE_NAME:latest -f Dockerfile.alpine .
+          docker tag $IMAGE_NAME:latest $IMAGE_NAME:${{ github.sha }}
 
       - name: Trivy deploy
         run: |
