@@ -1,0 +1,28 @@
+# Alap image: Alpine + Java 21
+FROM eclipse-temurin:21-jdk-alpine AS build
+
+# Munka könyvtár létrehozása
+WORKDIR /app
+
+# Maven wrapper és forráskód másolása
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
+COPY src ./src
+
+# Maven build
+RUN ./mvnw clean package -DskipTests
+
+# Futtatókörnyezet (csökkentett méretű Alpine image)
+FROM eclipse-temurin:21-jre-alpine
+
+# Munka könyvtár
+WORKDIR /app
+
+# JAR fájl másolása a build rétegből
+COPY --from=build /app/target/*.jar app.jar
+
+# Port megnyitása
+EXPOSE 8080
+
+# Alkalmazás futtatása
+CMD ["java", "-jar", "app.jar"]
