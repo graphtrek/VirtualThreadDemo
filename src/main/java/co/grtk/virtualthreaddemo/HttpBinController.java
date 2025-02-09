@@ -99,7 +99,7 @@ public class HttpBinController {
         long peakThreadCount = threadMXBean.getPeakThreadCount();
         long elapsed = System.currentTimeMillis() - start;
         sum += elapsed;
-        log.info("\n{}\nrequest # {} threads # {} blocked # {} ms elapsed {} ms jvm threads # {}/{}", combined, requestCounter, nrOfThreads, seconds, elapsed, threadCount,peakThreadCount);
+        log.info("\n{}\nrequest # {} paralellThreads # {} blocked # {} ms elapsed {} ms requestThreads/allThreadsPeak # {}/{}", combined, requestCounter, nrOfThreads, seconds, elapsed, threadCount,peakThreadCount);
         return Thread.currentThread().toString();
     }
 
