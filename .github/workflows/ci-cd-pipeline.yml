@@ -69,15 +69,16 @@ jobs:
         run: |
           trivy image --exit-code 1 --severity HIGH,CRITICAL ${{ github.actor }}/virtualthreaddemo:latest
 
-      - name: Docker kép feltöltése
+      - name: Docker image feltöltése GHCR-re
         run: |
-          docker push ${{ github.actor }}/virtualthreaddemo:latest
-          docker push ${{ github.actor }}/virtualthreaddemo:${{ github.sha }}
+          IMAGE_NAME=ghcr.io/${{ github.repository }}/virtualthreaddemo
+          docker push $IMAGE_NAME:latest
+          docker push $IMAGE_NAME:${{ github.sha }}
 
-      - name: Docker kép mentése artifaktként
-        uses: actions/upload-artifact@v4
+      - name: Docker image mentése artifaktként
+        uses: actions/upload-artifact@v3
         with:
           name: virtualthreaddemo-image
           path: |
-            $(docker save ${{ github.actor }}/virtualthreaddemo:latest -o virtualthreaddemo_latest.tar)
+            $(docker save ghcr.io/${{ github.repository }}/virtualthreaddemo:latest -o virtualthreaddemo_latest.tar)
             virtualthreaddemo_latest.tar
