@@ -33,7 +33,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Minőségellenőrzés
-        uses: sonarsource/sonarqube-quality-gate-action@v3
+        uses: sonarsource/sonarqube-quality-gate-action@v2
         env:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
