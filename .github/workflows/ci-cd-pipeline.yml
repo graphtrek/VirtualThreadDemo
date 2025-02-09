@@ -66,9 +66,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y trivy
 
-      - name: Docker kép biztonsági ellenőrzése (Trivy)
+      - name: Docker image biztonsági ellenőrzése (Trivy)
         run: |
-          trivy image --exit-code 1 --severity HIGH,CRITICAL ${{ github.actor }}/virtualthreaddemo:latest
+          IMAGE_NAME=ghcr.io/${{ github.repository }}/virtualthreaddemo
+          trivy image --exit-code 1 --severity HIGH,CRITICAL $IMAGE_NAME:latest
 
       - name: Docker image feltöltése GHCR-re
         run: |
