@@ -53,8 +53,8 @@ jobs:
 
       - name: Docker image build (Alpine + Java 21)
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/virtualthreaddemo:latest -f Dockerfile.alpine .
-          docker tag ${{ secrets.DOCKER_USERNAME }}/virtualthreaddemo:latest ${{ secrets.DOCKER_USERNAME }}/virtualthreaddemo:${{ github.sha }}
+          docker build -t ${{ github.actor }}/virtualthreaddemo:latest -f Dockerfile.alpine .
+          docker tag ${{ github.actor }}/virtualthreaddemo:latest ${{ github.actor }}/virtualthreaddemo:${{ github.sha }}
 
       - name: Trivy deploy
         run: |
@@ -67,17 +67,17 @@ jobs:
 
       - name: Docker kép biztonsági ellenőrzése (Trivy)
         run: |
-          trivy image --exit-code 1 --severity HIGH,CRITICAL ${{ secrets.DOCKER_USERNAME }}/virtualthreaddemo:latest
+          trivy image --exit-code 1 --severity HIGH,CRITICAL ${{ github.actor }}/virtualthreaddemo:latest
 
       - name: Docker kép feltöltése
         run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/virtualthreaddemo:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/virtualthreaddemo:${{ github.sha }}
+          docker push ${{ github.actor }}/virtualthreaddemo:latest
+          docker push ${{ github.actor }}/virtualthreaddemo:${{ github.sha }}
 
       - name: Docker kép mentése artifaktként
         uses: actions/upload-artifact@v4
         with:
           name: virtualthreaddemo-image
           path: |
-            $(docker save ${{ secrets.DOCKER_USERNAME }}/virtualthreaddemo:latest -o virtualthreaddemo_latest.tar)
+            $(docker save ${{ github.actor }}/virtualthreaddemo:latest -o virtualthreaddemo_latest.tar)
             virtualthreaddemo_latest.tar
