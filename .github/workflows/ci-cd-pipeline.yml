@@ -71,7 +71,7 @@ jobs:
 
       - name: Docker image feltöltése GHCR-re
         run: |
-          IMAGE_NAME=ghcr.io/${{ github.repository }}/virtualthreaddemo
+          IMAGE_NAME=ghcr.io/virtualthreaddemo/virtualthreaddemo
           docker push $IMAGE_NAME:latest
           docker push $IMAGE_NAME:${{ github.sha }}
 
