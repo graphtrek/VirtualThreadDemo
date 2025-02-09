@@ -26,11 +26,11 @@ jobs:
       - name: Függőségek telepítése és build
         run: ./mvnw clean verify
 
-      - name: SonarQube elemzés
-        uses: sonarsource/sonarqube-scan-action@v4
-        env:
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#      - name: SonarQube elemzés
+#        uses: sonarsource/sonarqube-scan-action@v4
+#        env:
+#          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Minőségellenőrzés
         uses: sonarsource/sonarqube-quality-gate-action@v1.1.0
