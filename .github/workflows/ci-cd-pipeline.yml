@@ -58,5 +58,5 @@ jobs:
         with:
           name: virtualthreaddemo-image
           path: |
-            $(docker save ghcr.io/${{ github.actor }}/virtualthreaddemo:latest -o virtualthreaddemo_latest.tar)
+            $(docker save ghcr.io/${{ github.actor }}/virtualthreaddemo:${{ github.sha }} -o virtualthreaddemo_latest.tar)
             virtualthreaddemo_latest.tar
