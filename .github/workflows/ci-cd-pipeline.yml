@@ -77,12 +77,11 @@ jobs:
         run: |
           IMAGE_NAME=ghcr.io/${{ github.actor }}/virtualthreaddemo
           docker push $IMAGE_NAME:latest
-          docker push $IMAGE_NAME:${{ github.sha }}
 
       - name: Docker image mentése artifaktként
         uses: actions/upload-artifact@v4
         with:
           name: virtualthreaddemo-image
           path: |
-            $(docker save ghcr.io/${{ github.actor }}/virtualthreaddemo:${{ github.sha }} -o virtualthreaddemo_latest.tar)
+            $(docker save ghcr.io/${{ github.actor }}/virtualthreaddemo:latest -o virtualthreaddemo_latest.tar)
             virtualthreaddemo_latest.tar
