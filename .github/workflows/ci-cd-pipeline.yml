@@ -39,6 +39,7 @@ jobs:
             # mandatory
             -Dsonar.projectKey=graphtrek_VirtualThreadDemo
             -Dsonar.organization=graphtrek-1
+            -Dsonar.exclusions=**/*.java
             # Comma-separated paths to directories containing main source files.
             #-Dsonar.sources= # optional, default is project base directory
             # When you need the analysis to take place in a directory other than the one from which it was launched
