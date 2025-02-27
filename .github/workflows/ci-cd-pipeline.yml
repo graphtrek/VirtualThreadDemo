@@ -80,7 +80,7 @@ jobs:
 
       - name: Docker image mentése (artifactként)
         run: |
-          IMAGE_NAME=ghcr.io/${{ github.repository }}/virtualthreaddemo
+          IMAGE_NAME=ghcr.io/${{ github.actor }}/virtualthreaddemo
           docker save -o virtualthreaddemo_latest.tar $IMAGE_NAME:latest
 
       - name: Docker image feltöltése GitHub Artifacts-ba
