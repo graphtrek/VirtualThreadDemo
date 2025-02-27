@@ -1,7 +1,7 @@
-# Alap image: Alpine + Java 21
+# 1️⃣ Build réteg: Az alkalmazás buildelése egy teljes JDK környezetben
 FROM eclipse-temurin:21-jdk-alpine AS build
 
-# Munka könyvtár létrehozása
+# Munka könyvtár beállítása
 WORKDIR /app
 
 # Maven wrapper és forráskód másolása
@@ -9,17 +9,22 @@ COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
 COPY src ./src
 
-# Maven build
+# Maven build futtatása
 RUN ./mvnw clean package -DskipTests
 
-# Futtatókörnyezet (csökkentett méretű Alpine image)
+# 2️⃣ Runtime réteg: A kész alkalmazás egy kisebb JRE környezetben
 FROM eclipse-temurin:21-jre-alpine
 
-# Munka könyvtár
-WORKDIR /app
+# Nem root felhasználó létrehozása és beállítása
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
-# JAR fájl másolása a build rétegből
+# Munka könyvtár létrehozása és jogok beállítása
+WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
+RUN chown -R appuser:appgroup /app
+
+# Felhasználóváltás (root ➝ appuser)
+USER appuser
 
 # Port megnyitása
 EXPOSE 8080
